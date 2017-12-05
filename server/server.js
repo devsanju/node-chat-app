@@ -1,13 +1,16 @@
 const path = require('path');
-const http = require('http');
+//const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
 
 const publicPath = path.join(__dirname, '../public');
 const port = process.env.PORT || 3000;
-var app = express();
-var server = http.createServer(app);
-var io = socketIO(server);
+var app = express(),
+  http = require('http'),
+  server = http.createServer(app),
+  io = socketIO.listen(server);
+//var server = http.createServer(app);
+//var io = socketIO(server);
 
 // middleware --- set public resource directory
 app.use(express.static(publicPath));
