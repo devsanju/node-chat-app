@@ -1,5 +1,21 @@
 var socket = io();
 
+function scrollToBottom () {
+	// Selectors
+	var messages = jQuery('#messages');
+	var newMessage = messages.children('li:last-child');
+	// Height
+	var clientHeight = messages.prop('clientHeight');
+	var scrollTop = messages.prop('scrollTop');
+	var scrollHeight = messages.prop('scrollHeight');
+	var newMessageHeight = newMessage.innerHeight();
+	var lastMessageHeight = newMessage.prev().innerHeight();
+
+	if(clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight) {
+		messages.scrollTop(scrollHeight);
+	}
+}
+
 socket.on('connect', function() {
 	console.log('Connected to server');
 
@@ -22,6 +38,7 @@ socket.on('newMessage', function(message) {
 		createdAt: formattedTime
 	});
 	jQuery('#messages').append(html);
+	scrollToBottom();
 });
 
 jQuery('#message-form').on('submit', function(e) {
@@ -46,15 +63,7 @@ socket.on('newLocationMessage', function (message) {
 		createdAt: formattedTime
 	});
 	jQuery('#messages').append(html);
-
-
-	// var li = jQuery('<li></li>');
-	// var a = jQuery('<a target="_blank">My current location</a>');
-	// var formattedTime = moment(message.createdAt).format('hh:mm:ss a');
-	// li.text(`${formattedTime} ${message.from}:`);
-	// a.attr('href', message.url);
-	// li.append(a);
-	// jQuery('#messages').append(li);
+	scrollToBottom();
 });
 
 var locationButton = jQuery('#send-location');
